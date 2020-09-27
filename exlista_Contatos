@@ -1,0 +1,166 @@
+#include <iostream>
+using namespace std;
+
+struct Lista
+{
+	int prontuario;
+	string nome;
+	double salario;
+	struct Lista *prox;
+};
+
+Lista* init()
+{
+	return NULL;
+}
+
+int isEmpty(Lista* lista)
+{
+	return (lista == NULL);
+}
+
+Lista* insert(Lista* lista, int p, string n, double s)
+{
+	Lista* novo = new Lista;
+	novo->prontuario = p;
+	novo->nome = n;
+	novo->salario = s;
+	novo->prox = lista;
+	return novo;
+}
+
+void print(Lista* lista)
+{
+	Lista* aux;
+	aux = lista;
+	while (aux != NULL)
+	{
+		cout << "Prontuário: " << aux->prontuario << endl;
+		cout << "Nome: " << aux->nome << endl;
+		cout << "Salário: " << aux->salario << endl;
+		aux = aux->prox;
+	}
+}
+
+Lista* find(Lista* lista, int p)
+{
+	Lista* aux;
+	aux = lista;
+	while (aux != NULL && aux->prontuario != p)
+	{
+		aux = aux->prox;
+	}
+	if (aux == NULL)
+	{
+		aux = new Lista;
+		aux->prontuario = -1;
+		aux->prox = NULL;
+	}
+	return aux;
+}
+
+Lista* remove(Lista* lista, int p)
+{
+	Lista *ant = NULL;
+	Lista *aux;
+	
+	aux = lista;
+	while (aux != NULL && aux->prontuario != p)
+	{
+		ant = aux;
+		aux = aux->prox;
+	}
+	if (aux == NULL)
+	{
+		return lista;
+	}
+	if (ant == NULL) // era primeiro
+	{
+		lista = aux->prox;
+	}
+	else // estava no meio
+	{
+		ant->prox = aux->prox;
+	}
+	free(aux);
+	return lista;
+}
+
+void freeList(Lista* lista)
+{
+	Lista *aux;
+	aux = lista;
+	while (aux != NULL)
+	{
+		Lista *ant = aux->prox;
+		free(aux);
+		aux = ant;
+	}
+}
+
+int main(int argc, char** argv)
+{
+	Lista *minhaLista;
+	minhaLista = init();
+	int prontuario;
+	string nome;
+	double salario;
+	
+	int op;
+	
+	cout << "..:: MENU ::..";
+    cout << " ";
+    cout << "0. Sair";
+    cout << "1. Incluir";
+    cout << "2. Excluir";
+    cout << "3. Pesquisar";
+    cout << "4. Listar";
+    cin >> op;
+    
+    do{
+  	  cin>>op;
+    	switch(op) {
+    		case 0:
+    			freeList(minhaLista);
+            break;
+            case 1:
+            	cout << "Prontuário: ";
+            	cin >> prontuario;
+            	cout << "Nome:" ;
+            	cin >> nome;
+            	cout << "Salario";
+            	cin >> salario;
+		    	insert(minhaLista, prontuario, nome, salario);
+		    	op = -1;
+            break;
+            case 2:
+            	cout << "Prontuario:";
+            	cin >> prontuario;
+                remove(minhaLista, prontuario);
+		    	op = -1;
+            break;
+            case 3:
+			    cout << "Prontuario:";
+            	cin >> prontuario;
+                find(minhaLista, prontuario);
+                if (procurado->prontuario > -1)
+             	{
+  	   	   	   	   cout << "Resultado da busca: " << procurado->prontuario << endl;		
+	   	   	   	}
+ 			 	 else
+   			    {
+   	   	   	   	   cout <<"Nao encontrado" << endl;
+				   }				   
+		    	op = -1;
+            break;
+            case 4:
+                print(minhaLista);
+            break;
+            default:
+                cout << "Opção inválida, tente novamente!";
+				cin >> op;  
+  	  }  
+	} while(op < 0 || op > 4);  
+	
+	return 0;
+}
